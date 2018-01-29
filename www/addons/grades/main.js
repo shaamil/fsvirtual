@@ -22,10 +22,8 @@ angular.module('mm.addons.grades', [])
 .config(function($stateProvider, $mmUserDelegateProvider, $mmCoursesDelegateProvider, $mmContentLinksDelegateProvider,
             $mmSideMenuDelegateProvider, mmaGradesPriority, mmaGradesViewGradesPriority, mmaGradesSideMenuPriority) {
 
-    $stateProvider
-
-    .state('site.coursesgrades', {
-        url: '/coursesgrades',
+    $stateProvider.state('site.coursesgrades', {
+        url: '/grade',
         views: {
             'site': {
                 templateUrl: 'addons/grades/templates/courses.html',
@@ -33,7 +31,20 @@ angular.module('mm.addons.grades', [])
             }
         }
     });
+	
+	$stateProvider.state('site.grade.report', {
+        url: '/grade',
+        views: {
+            'site': {
+                templateUrl: 'addons/grades/templates/courses.html',
+                controller: 'mmaGradesCoursesGradesCtrl'
+            }
+        }
+    });
+	
+	
 
+//url: '/coursesgrades',
 
     // Register plugin on user profile.
     $mmUserDelegateProvider.registerProfileHandler('mmaGrades:viewGrades', '$mmaGradesHandlers.viewGrades', mmaGradesViewGradesPriority);
@@ -42,8 +53,11 @@ angular.module('mm.addons.grades', [])
     $mmCoursesDelegateProvider.registerNavHandler('mmaGrades', '$mmaGradesHandlers.coursesNav', mmaGradesPriority);
 
     // Register content links handler.
+   //$mmContentLinksDelegateProvider.registerLinkHandler('mmaGrades:index', '$mmaGradesHandlers.CourseOverviewhandler');
+    $mmContentLinksDelegateProvider.registerLinkHandler('mmaGrades:index', '$mmaGradesHandlers.indexLinksHandler');
     $mmContentLinksDelegateProvider.registerLinkHandler('mmaGrades:user', '$mmaGradesHandlers.userLinksHandler');
     $mmContentLinksDelegateProvider.registerLinkHandler('mmaGrades:overview', '$mmaGradesHandlers.overviewLinksHandler');
+	$mmContentLinksDelegateProvider.registerLinkHandler('mmaGrades:overview', '$mmaGradesHandlers.gradeLinksHandler');
 
     // Register side menu addon.
     $mmSideMenuDelegateProvider.registerNavHandler('mmaGrades', '$mmaGradesHandlers.sideMenuNav', mmaGradesSideMenuPriority);
