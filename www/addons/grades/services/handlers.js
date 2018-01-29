@@ -211,6 +211,28 @@ angular.module('mm.addons.grades')
         return self;
     };
 
+    //Handler for Link
+    self.indexLinksHandler = $mmContentLinkHandlerFactory.createChild(
+            /\/grade\/report\/mygrades\.php((?![\?\&](id|user1|user2)=\d+).)*$/, '$mmUserDelegate_mmaGrades:viewGrades');
+
+    // Check if the handler is enabled for a certain site. See $mmContentLinkHandlerFactory#isEnabled.
+    self.indexLinksHandler.isEnabled = $mmaCoursesGrades.isPluginEnabled;
+
+    // Get actions to perform with the link. See $mmContentLinkHandlerFactory#getActions.
+    self.indexLinksHandler.getActions = function(siteIds, url, params, courseId) {
+        return [{
+            action: function(siteId) {
+                // Always use redirect to make it the new history root (to avoid "loops" in history).
+                $state.go('redirect', {
+                    siteid: siteId,
+                    state: 'site.coursesgrades',
+                    params: {}
+                });
+            }
+        }];
+    };
+
+    
     /**
      * Content links handler for view user grades (can be current user).
      *
@@ -261,9 +283,26 @@ angular.module('mm.addons.grades')
      * @ngdoc method
      * @name $mmaGradesHandlers#overviewLinksHandler
      */
-    self.overviewLinksHandler = $mmContentLinkHandlerFactory.createChild(
-                '/grade/report/overview/index.php', '$mmSideMenuDelegate_mmaGrades');
+ 
 
+	self.gradeLinksHandler = $mmContentLinkHandlerFactory.createChild(
+            /\/grade\/report\/mygrades\.php.*([\?\&](id|user1|user2)=\d+)/, '$mmSideMenuDelegate_mmaGrades');
+	self.gradeLinksHandler.isEnabled = $mmaCoursesGrades.isPluginEnabled;
+	self.gradeLinksHandler.getActions = function(siteIds, url, params, courseId) {
+        return [{
+            action: function(siteId) {
+                // Always use redirect to make it the new history root (to avoid "loops" in history).
+                $state.go('redirect', {
+                    siteid: siteId,
+                    state: 'site.grade.report',
+                    params: {}
+                });
+            }
+        }];
+    };
+	
+	self.overviewLinksHandler = $mmContentLinkHandlerFactory.createChild(
+                '/grade/report/overview/index.php', '$mmSideMenuDelegate_mmaGrades');
     // Check if the handler is enabled for a certain site. See $mmContentLinkHandlerFactory#isEnabled.
     self.overviewLinksHandler.isEnabled = $mmaCoursesGrades.isPluginEnabled;
 
