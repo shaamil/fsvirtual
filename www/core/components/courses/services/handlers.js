@@ -278,6 +278,21 @@ angular.module('mm.core.courses')
         }];
     };
 
+	self.dashboardLinksHandler2 = $mmContentLinkHandlerFactory.createChild(
+                 /\/my\/index\.php((?![\?\&](id|user1|user2)=\d+).)*$/, '$mmSideMenuDelegate_mmCourses');
+
+    // Get actions to perform with the link. See $mmContentLinkHandlerFactory#getActions.
+    self.dashboardLinksHandler2.getActions = function(siteIds, url, params, courseId) {
+        return [{
+            action: function(siteId) {
+                // Always use redirect to make it the new history root (to avoid "loops" in history).
+                $state.go('redirect', {
+                    siteid: siteId || $mmSite.getId(),
+                    state: 'site.mm_courses'
+                });
+            }
+        }];
+    };
     /**
      * Side menu nav handler.
      *
